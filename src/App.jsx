@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FileUploader } from "react-drag-drop-files"
 
 const fileTypes = ["MP4", "AVI", "MOV", "OGV", "MPEG"];
