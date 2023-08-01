@@ -1,4 +1,5 @@
 export default {
+  box: " bg-blue-400 p-5 m-5 flex justify-between",
   upload: "flex justify-between items-center w-100",
   mainBackground: "bg-indigo-500 h-[100vh]",
   container: "container px-4 mx-auto",

@@ -11,13 +11,10 @@ export default function App() {
   function addHistory(param) {
     setHistory([...history, param]);
   }
-
   const handleChange = (file) => {
     setFile(file);
     addHistory(file.name);
-    // console.log(file);
   };
-  //   console.log(history);
   return (
     <div className={generalStyle.container}>
       <h1 className={generalStyle.header.title}>Hello To Drag & Drop Files</h1>
