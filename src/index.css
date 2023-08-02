@@ -2,4 +2,14 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Ajoute tes styles personnalisés ici */
+label[for="file"] {
+    height: 300px;
+    width: 80vw;
+    margin: 25px auto;
+    max-width: 80vw;
+    padding: 0 100px;
+}
+
+.file-types {
+    max-width: 15vw !important;
+}

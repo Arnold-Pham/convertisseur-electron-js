@@ -1,20 +1,19 @@
-import React from "react";
-import { generalStyle } from "../styles";
+import React from 'react';
+import { generalStyle } from '../styles';
 
 export default function Box(props) {
-  return (
-    <div className={generalStyle.box}>
-      <p>{props.conv}</p>
-      <div>
-        <select name="" id="">
-          <option value="1">AVI</option>
-          <option value="2">MP4</option>
-          <option value="3">OGV</option>
-          <option value="4">MPEG</option>
-          <option value="5">MOV</option>
-        </select>
-        <button className={generalStyle.button}>Delete</button>
-      </div>
-    </div>
-  );
+	return (
+		<div className={generalStyle.box.container}>
+			<div className={generalStyle.box.text}>
+				<p>{props.conv.name}</p>
+				<p>{(props.conv.size / (1024 * 1024)).toFixed(2)} MB</p>
+			</div>
+			<div>
+				<select className={generalStyle.box.select} name={props.nameFile} id={props.nameFile}>
+					{props.fileTypes.map((value, index) => <option value={index}>{value}</option>)}
+				</select>
+				<button className={generalStyle.button.red}>Delete</button>
+			</div>
+		</div>
+	);
 }
