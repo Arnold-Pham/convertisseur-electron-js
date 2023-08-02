@@ -10,8 +10,9 @@ export default function Box(props) {
 					<p>{(props.conv.size / (1024 * 1024)).toFixed(2)} MB</p>
 				</div>
 				<div>
-					<select className={generalStyle.box.select} name={props.nameFile} id={props.nameFile}>
-						{props.fileTypes.map((value, index) => <option value={index}>{value}</option>)}
+					<select className={generalStyle.box.select} name={props.nameFile} id={`select-${props.nameFile}`} onChange={(e) => props.onSelectChange(props.nameFile, e.target.value)} required>
+						<option value="none" disabled selected>--Choose--</option>
+						{props.fileTypes.map((value, index) => (<option key={index} value={index}>{value}</option>))}
 					</select>
 					<button className={generalStyle.button.red}>Delete</button>
 				</div>

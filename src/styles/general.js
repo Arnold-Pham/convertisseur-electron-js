@@ -9,7 +9,7 @@ export default {
 		progress: "w-full"
 	},
 	button: {
-		container: "text-white flex justify-around",
+		container: "text-white flex justify-around mb-5",
 		red: "text-white bg-red-600 enabled:hover:bg-red-700 enabled:focus:ring-4 enabled:focus:outline-none enabled:focus:ring-red-300 font-medium rounded-md text-sm px-5 py-2.5 text-center enabled:dark:bg-red-500 enabled:dark:hover:bg-red-600 enabled:dark:focus:ring-red-700",
 		blue: "text-white bg-indigo-600 enabled:hover:bg-indigo-700 enabled:focus:ring-4 enabled:focus:outline-none enabled:focus:ring-indigo-300 font-medium rounded-md text-sm px-5 py-2.5 text-center enabled:dark:bg-indigo-500 enabled:dark:hover:bg-indigo-700 enabled:dark:focus:ring-indigo-700"
 	},

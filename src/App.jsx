@@ -8,6 +8,15 @@ const fileTypes = ["MP4", "AVI", "MOV", "OGV", "MPEG"];
 export default function App() {
   const [file, setFile] = useState(null);
   const [history, setHistory] = useState([]);
+  const [selectedValues, setSelectedValues] = useState({});
+
+  const handleSelectChange = (fileIndex, value) => {
+    setSelectedValues((prevSelectedValues) => ({ ...prevSelectedValues, [fileIndex]: value, }));
+  };
+
+  const handleConvert = () => {
+    console.log(selectedValues);
+  };
 
   const addHistory = (param) => {
     setHistory([...history, param]);
@@ -23,20 +32,11 @@ export default function App() {
     setHistory([]);
   };
 
-  //   fonction de conversion
-  const handleConvert = () => {
-    // recupere l'id de mon box
-    // recupere la value de mon tableau
-  };
   return (
     <div className={generalStyle.container}>
       <h1 className={generalStyle.title}>Convert Files</h1>
       <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
-      {history.length != 0
-        ? history.map((value, index) => (
-            <Box nameFile={index} conv={value} fileTypes={fileTypes} />
-          ))
-        : undefined}
+      {history.length != 0 ? history.map((value, index) => <Box key={index} nameFile={index} conv={value} fileTypes={fileTypes} onSelectChange={handleSelectChange} />) : undefined}
       {file != null ? (
         <div className={generalStyle.button.container}>
           <button className={generalStyle.button.red} onClick={handleCancel}>
