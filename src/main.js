@@ -1,35 +1,35 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
 
-if (require('electron-squirrel-startup')) {
-	app.quit();
+if (require("electron-squirrel-startup")) {
+  app.quit();
 }
 
 const createWindow = () => {
-	const mainWindow = new BrowserWindow({
-		width: 1280,
-		height: 720,
-		webPreferences: {
-			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-		},
-	});
+  const mainWindow = new BrowserWindow({
+    width: 1280,
+    height: 720,
+    webPreferences: {
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    },
+  });
 
-	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-	// Open the DevTools.
-	// mainWindow.webContents.openDevTools();
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools();
 };
 
-app.on('ready', createWindow);
+app.on("ready", createWindow);
 
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });
 
-app.on('activate', () => {
-	if (BrowserWindow.getAllWindows().length === 0) {
-		createWindow();
-	}
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });

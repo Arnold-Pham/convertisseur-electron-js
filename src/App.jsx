@@ -11,7 +11,10 @@ export default function App() {
   const [selectedValues, setSelectedValues] = useState({});
 
   const handleSelectChange = (fileIndex, value) => {
-    setSelectedValues((prevSelectedValues) => ({ ...prevSelectedValues, [fileIndex]: value, }));
+    setSelectedValues((prevSelectedValues) => ({
+      ...prevSelectedValues,
+      [fileIndex]: value,
+    }));
   };
 
   const handleConvert = () => {
@@ -19,7 +22,7 @@ export default function App() {
   };
 
   const addHistory = (param) => {
-    setHistory([...history, param]);
+    setHistory([...history, { value: param, id: history.length }]);
   };
 
   const handleChange = (file) => {
@@ -32,12 +35,28 @@ export default function App() {
     setHistory([]);
   };
 
+  const handleDelete = (param) => {
+    const arrayHistory = history.filter((pays) => pays.id !== param);
+    setHistory(arrayHistory);
+  };
+
   return (
     <div className={generalStyle.container}>
       <h1 className={generalStyle.title}>Convert Files</h1>
       <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
-      {history.length != 0 ? history.map((value, index) => <Box key={index} nameFile={index} conv={value} fileTypes={fileTypes} onSelectChange={handleSelectChange} />) : undefined}
-      {file != null ? (
+      {history.length != 0
+        ? history.map((item) => (
+            <Box
+              key={item.id}
+              nameFile={item.id}
+              conv={item.value}
+              fileTypes={fileTypes}
+              onSelectChange={handleSelectChange}
+              handleDelete={handleDelete}
+            />
+          ))
+        : undefined}
+      {history != 0 ? (
         <div className={generalStyle.button.container}>
           <button className={generalStyle.button.red} onClick={handleCancel}>
             Cancel
