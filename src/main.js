@@ -1,5 +1,7 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+// ???? sur la ligne 4
+const Ffmpeg = require("fluent-ffmpeg");
 
 if (require("electron-squirrel-startup")) {
   app.quit();
@@ -21,6 +23,29 @@ const createWindow = () => {
 };
 
 app.on("ready", createWindow);
+// APP video
+ipcMain.on("video:add", (event, path) => {
+  Ffmpeg.ffprobe(path, (error, metadata) => {
+    if (error) return console.error(error);
+    const result = { ...metadata.format, duration: metadata.format.duration };
+    mainWindow.webContents.send("metadata:completed", result);
+  });
+});
+
+// exemple de conversion
+ipcMain.on("convert:start", (event, video) => {
+  const filename = video.filename;
+  const outputName = filename.substring(
+    filename.lastIndexOf("/") + 1,
+    filename.lastIndexOf(".")
+  );
+  const outputDir = app.getPath("home");
+  Ffmpeg(filename)
+    .output(`${outputDir}/${outputName}.mp4`)
+    .on("progress", () => console.log("convert in progress..."))
+    .on("end", () => console.log("convert done"))
+    .run();
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
