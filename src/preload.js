@@ -1,5 +1,14 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('app', {
-	// Your code here
+	addVideo: (path, addMetaToHistory) => {
+		ipcRenderer.send('video:add', path)
+		ipcRenderer.on('video:done', (event, metadata) => {
+			addMetaToHistory(metadata)
+		})
+	},
+
+	convertVideo: (history) => {
+		ipcRenderer.send('video:conv', history)
+	}
 });

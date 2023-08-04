@@ -10,8 +10,8 @@ export default function Box(props) {
     <div className={generalStyle.box.container}>
       <div className={generalStyle.box.top}>
         <div className={generalStyle.box.text}>
-          <p>{props.conv.name}</p>
-          <p>{(props.conv.size / (1024 * 1024)).toFixed(2)} MB</p>
+          <p>{props.conv.filename.substr(props.conv.filename.lastIndexOf('\\') + 1, props.conv.filename.lastIndexOf('.') + 1)}</p>
+          <p>{props.duree}</p>
         </div>
         <div>
           <select className={generalStyle.box.select} name={props.nameFile} id={`select-${props.nameFile}`} onChange={(e) => props.onSelectChange(props.nameFile, e.target.value)} required >

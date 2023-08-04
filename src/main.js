@@ -1,12 +1,15 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
+const Ffmpeg = require("fluent-ffmpeg");
 const path = require("path");
+
+let mainWindow;
 
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
 const createWindow = () => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
     webPreferences: {
@@ -21,6 +24,28 @@ const createWindow = () => {
 };
 
 app.on("ready", createWindow);
+
+ipcMain.on("video:add", (event, path) => {
+  Ffmpeg.ffprobe(path, (error, metadata) => {
+    if (error) {
+      return console.error(error)
+    }
+    const result = { ...metadata.format }
+    mainWindow.webContents.send('video:done', result)
+  })
+})
+
+ipcMain.on('video:conv', (event, video) => {
+  const filename = video.filename
+  const outName = filename.substr(filename.lastIndexOf('\\') + 1, filename.lastIndexOf('.') + 1)
+  const outDir = app.getPath('desktop')
+
+  Ffmpeg(filename)
+    .output(`${outDir}\\${outName}.mp4`)
+    .on('progress', () => console.log('In progress'))
+    .on('end', () => console.log('Done'))
+    .run()
+})
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
