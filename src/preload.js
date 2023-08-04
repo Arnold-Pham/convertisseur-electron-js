@@ -8,7 +8,10 @@ contextBridge.exposeInMainWorld('app', {
 		})
 	},
 
-	convertVideo: (history, extensions, fileTypes) => {
+	convertVideo: (history, extensions, fileTypes, updateProgress) => {
 		ipcRenderer.send('video:conv', [history, extensions, fileTypes])
+		ipcRenderer.on('video:progress', (event, newProgress) => {
+			updateProgress(newProgress);
+		});
 	}
 });

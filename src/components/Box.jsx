@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { generalStyle } from "../styles";
 
 export default function Box(props) {
@@ -21,7 +21,7 @@ export default function Box(props) {
           <button className={generalStyle.button.red} onClick={deleteBox}>Delete</button>
         </div>
       </div>
-      <progress className={generalStyle.box.progress}></progress>
-    </div>
+      {props.progress ? <progress className={generalStyle.box.progress} value={props.progress} max='100'></progress> : undefined}
+    </div >
   );
 }

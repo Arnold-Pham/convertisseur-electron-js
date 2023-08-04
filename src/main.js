@@ -46,8 +46,8 @@ ipcMain.on('video:conv', (event, convert) => {
 
     Ffmpeg(filename)
       .output(`${outDir}\\${outName}.${extension}`)
-      .on('progress', () => console.log('In progress'))
-      .on('end', () => console.log('Done'))
+      .on('progress', (progress) => mainWindow.webContents.send('video:progress', { index, percent: parseInt(progress.percent.toFixed(0)) }))
+      .on('end', () => mainWindow.webContents.send('video:progress', { index, percent: 100 }))
       .run()
   })
 })

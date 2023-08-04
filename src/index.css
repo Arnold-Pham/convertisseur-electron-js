@@ -9,3 +9,7 @@ label[for="file"] {
     padding: 0 100px;
     max-width: 100%;
 }
+
+progress {
+    background-color: red !important;
+}
