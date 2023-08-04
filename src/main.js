@@ -6,9 +6,9 @@ const Ffmpeg = require("fluent-ffmpeg");
 if (require("electron-squirrel-startup")) {
   app.quit();
 }
-
+let mainWindow;
 const createWindow = () => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
     webPreferences: {

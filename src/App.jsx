@@ -8,9 +8,10 @@ const fileTypes = ["MP4", "AVI", "MOV", "OGV", "MPEG"];
 const convertTimeToFormat = (timeInSeconds) => {
   const timeInMilliseconds = timeInSeconds * 1000;
 
-  const date = date.getUTHours();
-  const minutes = date.getUTMinutes();
-  const seconds = date.getUTSeconds();
+  const date = new Date(timeInMilliseconds);
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const seconds = date.getUTCSeconds();
   const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
     .toString()
     .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
@@ -39,14 +40,15 @@ export default function App() {
         handleChange={handleChange}
       />
       <section className="mt-10">
-        {video
-          ? "ok"
-          : // <div>
-            //   <h3>{video.filename.split("/").at(-1)}</h3>
-            //   <p>{convertTimeToFormat(video.duration)}</p>
-            //   <button onClick={convertVideoHandler}>convert</button>
-            // </div>
-            "Any Video added"}
+        {video ? (
+          <div>
+            <h3>{video.filename.split("\\").at(-1)}</h3>
+            <p>{convertTimeToFormat(video.duration)}</p>
+            <button onClick={convertVideoHandler}>convert</button>
+          </div>
+        ) : (
+          "Any Video added"
+        )}
       </section>
     </div>
   );
