@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('app', {
 		})
 	},
 
-	convertVideo: (history) => {
-		ipcRenderer.send('video:conv', history)
+	convertVideo: (history, extensions, fileTypes) => {
+		ipcRenderer.send('video:conv', [history, extensions, fileTypes])
 	}
 });

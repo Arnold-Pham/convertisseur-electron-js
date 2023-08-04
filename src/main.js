@@ -35,16 +35,21 @@ ipcMain.on("video:add", (event, path) => {
   })
 })
 
-ipcMain.on('video:conv', (event, video) => {
-  const filename = video.filename
-  const outName = filename.substr(filename.lastIndexOf('\\') + 1, filename.lastIndexOf('.') + 1)
-  const outDir = app.getPath('desktop')
+ipcMain.on('video:conv', (event, convert) => {
+  convert[0].forEach((video, index) => {
+    console.log(video)
+    let filename = video.meta.filename
+    let outName = filename.substr(filename.lastIndexOf('\\') + 1, filename.lastIndexOf('.'))
+    let outDir = app.getPath('desktop')
 
-  Ffmpeg(filename)
-    .output(`${outDir}\\${outName}.mp4`)
-    .on('progress', () => console.log('In progress'))
-    .on('end', () => console.log('Done'))
-    .run()
+    let extension = convert[2][convert[1][index]].toLowerCase()
+
+    Ffmpeg(filename)
+      .output(`${outDir}\\${outName}.${extension}`)
+      .on('progress', () => console.log('In progress'))
+      .on('end', () => console.log('Done'))
+      .run()
+  })
 })
 
 app.on("window-all-closed", () => {

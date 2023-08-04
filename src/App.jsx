@@ -37,7 +37,6 @@ export default function App() {
   const handleSelectChange = (fileIndex, value) => {
     setSelectedValues((prevSelectedValues) => ({ ...prevSelectedValues, [fileIndex]: value }));
   };
-  console.log(selectedValues)
 
   const handleCancel = () => {
     setFile(null);
@@ -52,19 +51,16 @@ export default function App() {
     }
   };
 
-  const handleConvert = () => app.convertVideo(history);
+  const handleConvert = () => {
+    app.convertVideo(history, selectedValues, fileTypes);
+  }
 
   return (
     <div className={generalStyle.container}>
       <h1 className={generalStyle.title}>Convert Files</h1>
       <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
       {history.map((item) => <Box key={item.id} nameFile={item.id} conv={item.meta} fileTypes={fileTypes} onSelectChange={handleSelectChange} handleDelete={handleDelete} duree={convertTime(item.meta.duration)} />)}
-      {history.length !== 0 && (
-        <div className={generalStyle.button.container}>
-          <button className={generalStyle.button.red} onClick={handleCancel}>Cancel</button>
-          <button className={generalStyle.button.blue} onClick={handleConvert}>Convert</button>
-        </div>
-      )}
+      {history.length !== 0 && <div className={generalStyle.button.container}><button className={generalStyle.button.red} onClick={handleCancel}>Cancel</button><button className={generalStyle.button.blue} onClick={handleConvert}>Convert</button></div>}
     </div>
   );
 }
