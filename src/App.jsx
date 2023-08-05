@@ -1,74 +1,73 @@
-import React, { useState } from "react"
-import { FileUploader } from "react-drag-drop-files"
-import { generalStyle } from "./styles"
-import Box from "./components/Box.jsx"
+import React, { useState } from 'react'
+import { FileUploader } from 'react-drag-drop-files'
+import { generalStyle } from './styles'
+import Box from './components/Box.jsx'
 
-const fileTypes = ["MP4", "AVI", "MOV", "OGV", "MPEG"]
+const fileTypes = ['MP4', 'AVI', 'MOV', 'OGV', 'MPEG']
 
 const convertTime = (timeInSeconds) => {
-  const timeInMilliseconds = timeInSeconds * 1000
+	const timeInMilliseconds = timeInSeconds * 1000
+	const date = new Date(timeInMilliseconds)
+	const hours = date.getUTCHours()
+	const minutes = date.getUTCMinutes()
+	const seconds = date.getUTCSeconds()
+	const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 
-  const date = new Date(timeInMilliseconds)
-  const hours = date.getUTCHours()
-  const minutes = date.getUTCMinutes()
-  const seconds = date.getUTCSeconds()
-  const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
-
-  return formattedTime
+	return formattedTime
 }
 
 export default function App() {
-  const [file, setFile] = useState(null)
-  const [history, setHistory] = useState([])
-  const [selectedValues, setSelectedValues] = useState({})
-  const [progress, setProgress] = useState({});
+	const [file, setFile] = useState(null),
+		[history, setHistory] = useState([]),
+		[selectedValues, setSelectedValues] = useState({}),
+		[progress, setProgress] = useState({})
 
-  const handleChange = (doc) => {
-    setFile(doc)
-    const path = doc.path
-    app.addVideo(path, addMetaToHistory)
-  }
+	history.map(element => { if (!selectedValues.hasOwnProperty(element.id)) setSelectedValues({ ...selectedValues, [element.id]: 0 }) })
 
-  const addMetaToHistory = (param) => {
-    setHistory([...history, { meta: param, id: history.length }])
-  }
+	const handleCancel = () => {
+		setFile(null)
+		setHistory([])
+	}
 
-  const handleSelectChange = (fileIndex, value) => {
-    setSelectedValues((prevSelectedValues) => ({ ...prevSelectedValues, [fileIndex]: value }))
-  }
+	const handleDelete = (param) => {
+		const numericId = parseInt(param, 10)
+		if (!isNaN(numericId)) {
+			const arrayHistory = history.filter((item) => item.id !== numericId)
+			setHistory(arrayHistory)
+		}
+	}
 
-  const handleCancel = () => {
-    setFile(null)
-    setHistory([])
-  }
+	const handleChange = (doc) => {
+		setFile(doc)
+		const path = doc.path
+		app.addVideo(path, addMetaToHistory)
+	}
 
-  const handleDelete = (param) => {
-    const numericId = parseInt(param, 10)
-    if (!isNaN(numericId)) {
-      const arrayHistory = history.filter((item) => item.id !== numericId)
-      setHistory(arrayHistory)
-    }
-  }
+	const handleSelectChange = (fileIndex, value) => {
+		selectedValues.hasOwnProperty(fileIndex)
+			? setSelectedValues({ ...selectedValues, [fileIndex]: value })
+			: setSelectedValues({ [fileIndex]: value })
+	}
 
-  const handleConvert = () => {
-    app.convertVideo(history, selectedValues, fileTypes, updateProgress)
-  }
+	const addMetaToHistory = (param) => setHistory([...history, { meta: param, id: history.length }])
 
-  const updateProgress = (newProgress) => {
-    setProgress({ ...progress, newProgress })
-  }
+	const handleConvert = () => app.convertVideo(history, selectedValues, fileTypes, updateProgress)
 
+	const updateProgress = (newProgress) => setProgress({ ...progress, newProgress })
 
-
-  return (
-    <div className={generalStyle.container}>
-      <h1 className={generalStyle.title}>Convert Files</h1>
-      <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
-      {history.map((item) => <Box key={item.id} nameFile={item.id} conv={item.meta} fileTypes={fileTypes} onSelectChange={handleSelectChange} handleDelete={handleDelete} duree={convertTime(item.meta.duration)} progress={
-        progress.newProgress !== undefined ? (progress.newProgress['index'] == item.id ? progress.newProgress['percent'] : 0) : 0} />)}
-      {history.length !== 0 && <div className={generalStyle.button.container}><button className={generalStyle.button.red} onClick={handleCancel}>Cancel</button><button className={generalStyle.button.blue} onClick={handleConvert}>Convert</button></div>}
-    </div>
-  )
+	return (
+		<div className={generalStyle.container}>
+			<h1 className={generalStyle.title}>Convert Files</h1>
+			<FileUploader handleChange={handleChange} name="file" types={fileTypes} />
+			{history.map((item) => <Box key={item.id} nameFile={item.id} conv={item.meta} fileTypes={fileTypes} onSelectChange={handleSelectChange} handleDelete={handleDelete} duree={convertTime(item.meta.duration)} progress={
+				progress.newProgress !== undefined
+					? (progress.newProgress['index'] == item.id ? progress.newProgress['percent'] : 0)
+					: 0} />)}
+			{history.length !== 0 &&
+				<div className={generalStyle.button.container}>
+					<button className={generalStyle.button.red} onClick={handleCancel}>Cancel</button>
+					<button className={generalStyle.button.blue} onClick={handleConvert}>Convert</button>
+				</div>}
+		</div>
+	)
 }
