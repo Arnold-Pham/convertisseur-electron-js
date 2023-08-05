@@ -25,6 +25,7 @@ ipcMain.on('video:add', (event, path) => {
 	Ffmpeg.ffprobe(path, (error, metadata) => {
 		if (error) return console.error(error)
 		const result = { ...metadata.format }
+
 		mainWindow.webContents.send('video:done', result)
 	})
 })

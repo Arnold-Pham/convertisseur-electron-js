@@ -20,27 +20,34 @@ export default function App() {
 	const [file, setFile] = useState(null),
 		[history, setHistory] = useState([]),
 		[selectedValues, setSelectedValues] = useState({}),
-		[progress, setProgress] = useState({})
+		[progress, setProgress] = useState([])
 
 	history.map(element => { if (!selectedValues.hasOwnProperty(element.id)) setSelectedValues({ ...selectedValues, [element.id]: 0 }) })
 
 	const handleCancel = () => {
 		setFile(null)
 		setHistory([])
+		setSelectedValues({})
+		setProgress([])
 	}
 
 	const handleDelete = (param) => {
 		const numericId = parseInt(param, 10)
+
 		if (!isNaN(numericId)) {
 			const arrayHistory = history.filter((item) => item.id !== numericId)
 			setHistory(arrayHistory)
+			setSelectedValues({ ...selectedValues, [numericId]: 0 })
+
+			const arrayProgress = progress.filter((value) => value['index'] !== numericId)
+			setProgress(arrayProgress)
 		}
 	}
 
 	const handleChange = (doc) => {
-		setFile(doc)
 		const path = doc.path
 		app.addVideo(path, addMetaToHistory)
+		setFile(doc)
 	}
 
 	const handleSelectChange = (fileIndex, value) => {
@@ -53,16 +60,18 @@ export default function App() {
 
 	const handleConvert = () => app.convertVideo(history, selectedValues, fileTypes, updateProgress)
 
-	const updateProgress = (newProgress) => setProgress({ ...progress, newProgress })
+	const updateProgress = (newProgress) => setProgress([...progress, newProgress])
 
 	return (
 		<div className={generalStyle.container}>
 			<h1 className={generalStyle.title}>Convert Files</h1>
 			<FileUploader handleChange={handleChange} name="file" types={fileTypes} />
-			{history.map((item) => <Box key={item.id} nameFile={item.id} conv={item.meta} fileTypes={fileTypes} onSelectChange={handleSelectChange} handleDelete={handleDelete} duree={convertTime(item.meta.duration)} progress={
-				progress.newProgress !== undefined
-					? (progress.newProgress['index'] == item.id ? progress.newProgress['percent'] : 0)
-					: 0} />)}
+			<div>
+				{history.map((item) => <Box key={item.id} nameFile={item.id} conv={item.meta} fileTypes={fileTypes} onSelectChange={handleSelectChange} handleDelete={handleDelete} duree={convertTime(item.meta.duration)} progress={
+					progress[item.id] !== undefined && (progress[item.id]['index'] == item.id
+						? progress[item.id]['percent']
+						: 0)} />)}
+			</div>
 			{history.length !== 0 &&
 				<div className={generalStyle.button.container}>
 					<button className={generalStyle.button.red} onClick={handleCancel}>Cancel</button>
